@@ -3,11 +3,18 @@ import StartScreen from './components/StartScreen.vue';
 import { GoogleGenerativeAI, SchemaType } from "@google/generative-ai";
 import Quiz from "./components/Quiz.vue"
 import Loader from "./components/Loader.vue"
+import Results from "./components/Resullts.vue";
 
 import { ref } from 'vue'
 
 const questions = ref('')
 const status = ref('start')
+const userAnswers = ref([])
+
+const storeAnswer = (answer) => {
+  userAnswers.value.push(answer)
+}
+
 
 const startQuiz = async (topic)=> {
 
@@ -113,9 +120,9 @@ console.log(questions.value)
     
     <Loader v-if="status == 'loading'"/>
 
-    <Quiz :questions="questions.results" v-if="status === 'ready'" /> 
+    <Quiz  v-if="status === 'ready'"  @end-quiz="status = 'finished'" @store-answer="storeAnswer" :questions="questions.results"/> 
 
-    <!-- <p>{{ questions }}</p> -->
+    <Results v-if="status == 'finished'"/>
 
   </div>
 </template>
