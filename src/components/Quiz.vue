@@ -9,15 +9,18 @@
     <div class="answers">
       <button 
         class="answer"
+        :class="{active: answer === selecedOption}"
         v-for="answer in shuffleOptions"
         :key="answer"
+        @click = "selecedOption = answer"
       >
       {{ answer }}
     
     </button>
     </div>
 
-    <button @click="subnmitAnswer">Send</button>
+    <button v-if="selecedOption" @click="subnmitAnswer">Send</button>
+
   </section>
 </template>
 
@@ -25,7 +28,9 @@
 import { ref, computed } from "vue"
 
 const props = defineProps(['questions'])
+
 const currentQuestion =ref(0)
+const selecedOption = ref(null)
 
 const shuffleOptions = computed(() => {
   let options = [...props.questions[currentQuestion.value].incorrect_answers]

@@ -4,7 +4,7 @@
     <h2>Choose a toic to start testing your knoewledege</h2>
     <input v-model="topic" type="text" placeholder="Enter your topic...">
     <button @click="emit('start-quiz', topic)" :disabled="!topic">Start Quiz</button>
-    <p>{{ topic }}</p>
+    <!-- <p>{{ topic }}</p> -->
   </section>
 
 
