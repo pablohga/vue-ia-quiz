@@ -122,7 +122,7 @@ console.log(questions.value)
 
     <Quiz  v-if="status === 'ready'"  @end-quiz="status = 'finished'" @store-answer="storeAnswer" :questions="questions.results"/> 
 
-    <Results v-if="status == 'finished'"/>
+    <Results v-if="status == 'finished'" :userAnswers="userAnswers"/>
 
   </div>
 </template>
