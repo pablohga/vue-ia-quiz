@@ -1,15 +1,3 @@
-
-<script setup>
-const props = defineProps(['userAnswers']);
-const emit = defineEmits(['restart-quiz']);
-import { computed } from 'vue';
-
-const correctAnswersCount = computed(() => {
-  return props.userAnswers.filter(answer => answer.userAnswer === answer.question.correct_answer).length;
-})
-
-</script>
-
 <template>
     <section class="result-screen container">
         <h1 v-if="correctAnswersCount == userAnswers.length">&#127881; Congratulations!</h1>
@@ -33,3 +21,14 @@ const correctAnswersCount = computed(() => {
 
     </section>
 </template>
+
+<script setup>
+const props = defineProps(['userAnswers']);
+const emit = defineEmits(['restart-quiz']);
+import { computed } from 'vue';
+
+const correctAnswersCount = computed(() => {
+  return props.userAnswers.filter(answer => answer.userAnswer === answer.question.correct_answer).length;
+})
+
+</script>

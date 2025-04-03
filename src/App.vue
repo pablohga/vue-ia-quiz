@@ -1,3 +1,23 @@
+<template>
+  <div id="app">
+    <header>
+      <div class="container">
+        <img src="./assets/logo.png" alt="Logo" class="logo">
+        <h1>Quiz Generatos</h1>
+      </div>
+    </header>
+
+    <StartScreen v-if="status == 'start'" :errorMessage="errorMessage" @start-quiz="startQuiz"/> 
+    
+    <Loader v-if="status == 'loading'"/>
+
+    <Quiz  v-if="status === 'ready'"  @end-quiz="status = 'finished'" @store-answer="storeAnswer" :questions="questions.results"/> 
+
+    <Results v-if="status == 'finished'" @restart-quiz="restartQuiz" :userAnswers="userAnswers"/>
+
+  </div>
+</template>
+
 <script setup>
 import StartScreen from './components/StartScreen.vue';
 import { GoogleGenerativeAI, SchemaType } from "@google/generative-ai";
@@ -10,6 +30,13 @@ import { ref } from 'vue'
 const questions = ref('')
 const status = ref('start')
 const userAnswers = ref([])
+const errorMessage = ref('')
+const restartQuiz = () => {
+  questions.value = ''
+  status.value = 'start'
+  userAnswers.value = []
+  errorMessage.value = ''
+}
 
 const storeAnswer = (answer) => {
   userAnswers.value.push(answer)
@@ -93,7 +120,8 @@ const model = genAI.getGenerativeModel({
   },
 });
 
-const result = await model.generateContent(
+try {
+  const result = await model.generateContent(
   `
   Create 5 quiz questions about ${topic}
   Difficulty: Easy to Medium
@@ -102,29 +130,19 @@ const result = await model.generateContent(
 );
 questions.value = JSON.parse(result.response.text());
 status.value = 'ready'
-console.log(questions.value)
+
+} catch (error) {
+  errorMessage.value = error
+    status.value = 'start'
+}
+
+
+
+
 
 }
 </script>
 
-<template>
-  <div id="app">
-    <header>
-      <div class="container">
-        <img src="./assets/logo.png" alt="Logo" class="logo">
-        <h1>Quiz Generatos</h1>
-      </div>
-    </header>
 
-    <StartScreen v-if="status == 'start'" @start-quiz="startQuiz"/> 
-    
-    <Loader v-if="status == 'loading'"/>
-
-    <Quiz  v-if="status === 'ready'"  @end-quiz="status = 'finished'" @store-answer="storeAnswer" :questions="questions.results"/> 
-
-    <Results v-if="status == 'finished'" :userAnswers="userAnswers"/>
-
-  </div>
-</template>
 
 
